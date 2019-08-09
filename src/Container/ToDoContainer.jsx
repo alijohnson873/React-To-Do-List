@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 // import styles from "./ToDoContainer.scss";
+import ToDoSingle from "../components/ToDoitem";
 
 class ToDoContainer extends Component {
   state = { inputValue: "", toDoArray: [] };
@@ -10,10 +11,11 @@ class ToDoContainer extends Component {
 
   submitToDo = event => {
     event.preventDefault();
-    let inputArray = [this.state.inputValue];
+
     console.log("barry");
     this.setState({
-      toDoArray: [...this.state.toDoArray, this.state.inputValue]
+      toDoArray: [...this.state.toDoArray, this.state.inputValue],
+      inputValue: ""
     });
   };
 
@@ -24,11 +26,18 @@ class ToDoContainer extends Component {
         <form>
           <label>
             To Do
-            <input type="text" onChange={this.handleChange} />
+            <input
+              type="text"
+              value={this.state.inputValue}
+              onChange={this.handleChange}
+            />
           </label>
           <input type="submit" value="Submit" onClick={this.submitToDo} />
         </form>
-        <h1>{this.toDoArray}</h1>
+
+        {this.state.toDoArray.map((toDoSingle, index) => (
+          <ToDoSingle toDoText={toDoSingle} key={index} />
+        ))}
       </section>
     );
   }
