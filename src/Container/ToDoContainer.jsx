@@ -1,15 +1,37 @@
 import React, { Component } from "react";
-// import styles from "./ToDoContainer.scss";
+import styles from "./ToDoContainer.scss";
 import ToDoSingle from "../components/ToDoitem";
+import { firestore } from "../firebase";
 
 class ToDoContainer extends Component {
   state = {
     inputValue: "",
     editValue: "",
-    searchValue: "",
+    searchText: "",
     toDoArray: [],
-    filteredToDoArray: []
+    filteredArray: []
   };
+
+  componentDidMount() {
+    firestore
+      .collection("Test User")
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          console.log(doc.data().CompletedTasks);
+          // console.log(doc.data());
+        });
+      });
+
+    firestore
+      .collection("Test User")
+      .doc("LA")
+      .set({
+        name: "Los Angeles",
+        state: "CA",
+        country: "USA"
+      });
+  }
 
   handleChangeNewItem = event => {
     this.setState({ inputValue: event.target.value });
@@ -17,8 +39,16 @@ class ToDoContainer extends Component {
   };
 
   handleChangeSearch = event => {
-    this.setState({ searchValue: event.target.value });
-    console.log(this.state.searchValue);
+    let searchText = event.target.value;
+    console.log(searchText);
+  };
+
+  submitSearch = event => {
+    event.preventDefault();
+
+    // this.state.filteredArray.filter(item => item !== "one");
+
+    console.log(this.state.filteredArray);
   };
 
   submitToDo = event => {
@@ -27,12 +57,6 @@ class ToDoContainer extends Component {
       toDoArray: [...this.state.toDoArray, this.state.inputValue],
       inputValue: ""
     });
-  };
-
-  submitSearch = event => {
-    event.preventDefault();
-
-    console.log(this.state.inputValue);
   };
 
   handleEditChange = event => {
@@ -71,19 +95,19 @@ class ToDoContainer extends Component {
           />
           <input type="submit" value="Submit" onClick={this.submitToDo} />
 
-          <label>Search</label>
+          {/* <label>Search</label>
           <input
             type="text"
             //   value={this.state.inputValue}
             onChange={this.handleChangeSearch}
-          />
-          <input type="submit" value="Search" onClick={this.submitSearch} />
+          /> */}
+          {/* <input type="submit" value="Search" onClick={this.submitSearch} /> */}
         </form>
 
         {this.state.toDoArray.map((item, index) => (
           <ToDoSingle
             item={item}
-            key={index}
+            key={item}
             handleDelete={this.handleDelete}
             handleEditSubmit={this.handleEditSubmit}
             handleEditChange={this.handleEditChange}
