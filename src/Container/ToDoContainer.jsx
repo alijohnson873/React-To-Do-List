@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import styles from "./ToDoContainer.scss";
+import styles from "./ToDoContainer.module.scss";
 import ToDoSingle from "../components/ToDoitem";
 import { firestore } from "../firebase";
 
@@ -12,6 +12,7 @@ class ToDoContainer extends Component {
     filteredArray: []
   };
 
+  //firebase to be set up later below
   componentDidMount() {
     firestore
       .collection("Test User")
@@ -35,7 +36,6 @@ class ToDoContainer extends Component {
 
   handleChangeNewItem = event => {
     this.setState({ inputValue: event.target.value });
-    //  console.log(event.target.value);
   };
 
   handleChangeSearch = event => {
@@ -45,9 +45,6 @@ class ToDoContainer extends Component {
 
   submitSearch = event => {
     event.preventDefault();
-
-    // this.state.filteredArray.filter(item => item !== "one");
-
     console.log(this.state.filteredArray);
   };
 
@@ -60,12 +57,10 @@ class ToDoContainer extends Component {
   };
 
   handleEditChange = event => {
-    // event.preventDefault();
     this.setState({ editValue: event.target.value });
     console.log(this.state.editValue);
   };
 
-  //can I edit an item in an array
   handleEditSubmit = itemToEdit => {
     let editArr = this.state.toDoArray.map(item => {
       if (item === itemToEdit) {
@@ -104,15 +99,17 @@ class ToDoContainer extends Component {
           {/* <input type="submit" value="Search" onClick={this.submitSearch} /> */}
         </form>
 
-        {this.state.toDoArray.map((item, index) => (
-          <ToDoSingle
-            item={item}
-            key={item}
-            handleDelete={this.handleDelete}
-            handleEditSubmit={this.handleEditSubmit}
-            handleEditChange={this.handleEditChange}
-          />
-        ))}
+        <section className={styles.toDoItemsWrapper}>
+          {this.state.toDoArray.map((item, index) => (
+            <ToDoSingle
+              item={item}
+              key={item}
+              handleDelete={this.handleDelete}
+              handleEditSubmit={this.handleEditSubmit}
+              handleEditChange={this.handleEditChange}
+            />
+          ))}
+        </section>
       </section>
     );
   }
